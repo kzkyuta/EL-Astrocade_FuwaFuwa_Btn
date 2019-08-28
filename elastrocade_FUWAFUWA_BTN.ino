@@ -1,3 +1,14 @@
+/*
+This program is a fairmware for the Button on EL-Astrocade table version.
+This program reads the signal from the phototransister and diffelenciate the signal. 
+going along with differenciated val, this detects the push activity. 
+after the detection, the LED display function is activated 
+and send the serial signal to the main computer.
+
+coded by KZK on Augst 2019.
+
+*/
+
 #include <MsTimer2.h>
 #include "LedControl.h"
 #include "StaticValues.h"
