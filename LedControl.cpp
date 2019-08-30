@@ -19,8 +19,8 @@ void LedControl::setup(){
 }
 
 void LedControl::counter(){
+  count ++;
   if(flag_shoot){
-    count ++;
     if(cicle == maxCicle){
       cicle = 0;
       count = 0;
@@ -40,6 +40,8 @@ void LedControl::LED_all(uint8_t a, uint8_t b, uint8_t c){ //
 void LedControl::startShootEffect(){
   flag_shoot = true;
   LED_all(0,0,0);
+  count = 0;
+  cicle = 0;
 }
 
 void LedControl::InitShootEffect(){
@@ -49,6 +51,12 @@ void LedControl::InitShootEffect(){
   R_Led_Inc = 16; 
   R_Led_Cnt = 15; 
   R_Led_Dec = 14; 
+}
+
+void LedControl::InitGuideEffect(){
+  Led_Inc = 28;
+  Led_Cnt = 27;
+  Led_Dec = 26;
 }
 
 void LedControl::shootEffect(){
@@ -93,3 +101,50 @@ void LedControl::shootEffect(){
   }
 }
 
+void LedControl::guideEffect(){
+  if(!flag_shoot){
+    int v = 255/oneCicleCount*count;
+    Serial.println(v);
+    this->setPixelColor(Led_Inc, this->Color(255 - v, 255 - v, 255 - v));
+    this->setPixelColor(Led_Cnt, this->Color(255, 255, 255));
+    this->setPixelColor(Led_Dec, this->Color(0 + v, 0 + v, 0 + v));
+    if(count == oneCicleCount){
+      Led_Dec--;
+      Led_Cnt--;
+      Led_Inc--;
+      cicle ++;
+      count = 0;
+    }
+    if(cicle > 2*maxCicle){
+      cicle = 0;
+      count = 0;
+      InitGuideEffect();
+    }
+    this->show();
+  }
+}
+
+void LedControl::winEffect(){
+  if(!flag_shoot){
+    if(count < 30)  LED_all(255, 255, 255);
+    else if(count >= 30){
+      LED_all(0, 0, 0);
+      if(count > 60){
+        LED_all(0, 0, 0);
+        count = 0;
+      }
+    }
+  }
+}
+
+void LedControl::loseEffect(){
+  if(!flag_shoot){
+    uint8_t f = count / 2;
+    if(dim) LED_all(f, f, f);
+    if(!dim) LED_all(150 - f, 150 - f, 150 - f);
+    if(count > 300){
+      dim = !dim;
+      count = 0;
+    }
+  }
+}

@@ -33,6 +33,8 @@ int sensorValue5 = 0;
 bool stateShoot_0;
 bool stateShoot_1;
 
+int8_t gameScene = 0;  // 0:WAITING_FOR_INIT, 1: GAME, 2: WIN, 3:LOSE
+
 void readData() { // takes 0.72 - 1.1 ms (ARRAY_SIZE:10 - 100) to finish all calculation
  sensorValue0 = analogRead(A0);
  sensorValue1 = analogRead(A1);
@@ -93,7 +95,26 @@ void loop() {
   led_1.counter();
   led_0.shootEffect();
   led_1.shootEffect();
+  if(gameScene == 0){
+    led_0.guideEffect();
+    led_1.guideEffect();
+//    Serial.print(led_0.cicle);
+//    Serial.print(", ");
+//    Serial.println(led_0.Led_Dec);
+  }else if(gameScene == 2){
+    led_0.winEffect();
+    led_1.winEffect();
+    Serial.println(led_0.count);
+  }else if(gameScene  == 3){
+    led_0.loseEffect();
+    led_1.loseEffect();
+    Serial.println(led_0.count);
+  }
 //  Serial.println(led_0.cicle);
+
+  if(Serial.available() > 0){  // 1byte data revceiving
+    gameScene = Serial.read();
+  }
   
  delay(1);        // delay in between reads for stabili/ty
 }
