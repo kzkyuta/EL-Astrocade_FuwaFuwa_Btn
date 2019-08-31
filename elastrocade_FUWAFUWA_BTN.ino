@@ -114,6 +114,8 @@ void loop() {
 
   if(Serial.available() > 0){  // 1byte data revceiving
     gameScene = Serial.read();
+    led_0.setup();
+    led_1.setup();
   }
   
  delay(1);        // delay in between reads for stabili/ty

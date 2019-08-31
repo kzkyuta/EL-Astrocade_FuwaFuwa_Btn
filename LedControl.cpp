@@ -39,6 +39,7 @@ void LedControl::LED_all(uint8_t a, uint8_t b, uint8_t c){ //
 
 void LedControl::startShootEffect(){
   flag_shoot = true;
+  InitShootEffect();
   LED_all(0,0,0);
   count = 0;
   cicle = 0;
@@ -104,7 +105,6 @@ void LedControl::shootEffect(){
 void LedControl::guideEffect(){
   if(!flag_shoot){
     int v = 255/oneCicleCount*count;
-    Serial.println(v);
     this->setPixelColor(Led_Inc, this->Color(255 - v, 255 - v, 255 - v));
     this->setPixelColor(Led_Cnt, this->Color(255, 255, 255));
     this->setPixelColor(Led_Dec, this->Color(0 + v, 0 + v, 0 + v));
